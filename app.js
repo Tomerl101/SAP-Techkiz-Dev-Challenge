@@ -23,6 +23,7 @@ window.fbAsyncInit = function() {
     appId: '296693490877561',
     cookie: true,
     xfbml: true,
+    status: true,
     version: 'v3.1'
   });
 };
