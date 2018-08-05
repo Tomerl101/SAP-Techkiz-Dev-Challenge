@@ -58,7 +58,7 @@ function testAPI() {
 
       for (let i of dataArray) {
         if (i.likes.summary.total_count > 1) {
-          //format the date
+          //format the dates
           var regex = /\d{4}-\d{2}-\d{2}/;
           let date = i.created_time.match(regex)[0];
           document.getElementById('cards').innerHTML += `
@@ -75,6 +75,7 @@ function testAPI() {
   );
 }
 
+//fetch remaining photos not include in the inital FB query
 async function fetchPhotos(url) {
   console.log('FETCHING PHOTOS...');
   let response = await fetch(url);
@@ -91,6 +92,8 @@ function compareLikes(a, b) {
   return b.likes.summary.total_count - a.likes.summary.total_count;
 }
 
-// function compareDates(a, b) {
-//   return b.created_time - a.created_time;
-// }
+function compareDates(a, b) {
+  let date1 = new Date(a.created_time);
+  let date2 = new Date(b.created_time);
+  return date1 > date2 ? -1 : date1 < date2 ? 1 : 0;
+}
