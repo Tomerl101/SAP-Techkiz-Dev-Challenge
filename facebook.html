@@ -11,10 +11,17 @@
 </head>
 
 <body>
-  <script src="app.js"></script> welcome User
-  <fb:login-button scope="public_profile,email,user_posts" onlogin="checkLoginState();">
-  </fb:login-button>
-  <h1>Tomer's Wall Of Memory</h1>
+  <script src="app.js"></script>
+  welcome User
+  <div id='loginBtn'>
+    <fb:login-button scope="public_profile,email,user_posts" onlogin="checkLoginState();">
+    </fb:login-button>
+    <input type="checkbox" id="remember" name="feature" value="check" />
+    <label for="token">Remember me</label>
+  </div>
+  <h1 id='title'>Tomer's Wall Of Memory</h1>
+  <button id='next'>NEXT</button>
+
   <div id="status">
   </div>
   <section id="cards">
