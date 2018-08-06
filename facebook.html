@@ -6,24 +6,27 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <script src="https://code.jquery.com/jquery-3.3.1.slim.js"></script>
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ"
+    crossorigin="anonymous">
   <link rel="stylesheet" href="style.css">
   <title>Tomer - SAP</title>
 </head>
 
 <body>
   <script src="app.js"></script>
-  welcome User
-  <div id='loginBtn'>
-    <fb:login-button scope="public_profile,email,user_posts" onlogin="checkLoginState();">
-    </fb:login-button>
-    <input type="checkbox" id="remember" name="feature" value="check" />
-    <label for="token">Remember me</label>
-  </div>
-  <h1 id='title'>Tomer's Wall Of Memory</h1>
-  <button id='next'>NEXT</button>
+  <header>
+    <h1 id='title'>Tomer's Wall Of Memory</h1>
+    <div id='loginBtn'>
+      <fb:login-button scope="public_profile,email,user_posts" onlogin="checkLoginState();">
+      </fb:login-button>
+      <input type="checkbox" id="remember" name="feature" value="check" />
+      <label for="token">Remember me</label>
+    </div>
+    <div id="status">
+    </div>
+    <button id='next'>SHOW MORE</button>
+  </header>
 
-  <div id="status">
-  </div>
   <section id="cards">
   </section>
 </body>

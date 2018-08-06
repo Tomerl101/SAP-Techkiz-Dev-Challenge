@@ -1,5 +1,6 @@
 var dataArray;
 var userToken;
+var i = 0;
 
 function statusChangeCallback(response) {
   console.log('statusChangeCallback');
@@ -7,7 +8,7 @@ function statusChangeCallback(response) {
   console.log(userToken);
 
   //save token iff the user check 'remember me'
-  if ($('#remember').is(":checked") == true) {
+  if ($('#remember').is(':checked') == true) {
     document.cookie = `token=${userToken}`;
   }
   if (response.status === 'connected') {
@@ -19,13 +20,13 @@ function statusChangeCallback(response) {
 }
 
 function checkLoginState() {
-  FB.getLoginStatus(function (response) {
+  FB.getLoginStatus(function(response) {
     userToken = response.authResponse.accessToken;
     statusChangeCallback(response);
   });
 }
 
-window.fbAsyncInit = function () {
+window.fbAsyncInit = function() {
   FB.init({
     appId: '296693490877561',
     cookie: true,
@@ -34,35 +35,37 @@ window.fbAsyncInit = function () {
     version: 'v3.1'
   });
 
-  FB.getLoginStatus(function (response) {
+  FB.getLoginStatus(function(response) {
     let decodedCookie = decodeURIComponent(document.cookie);
-    if (decodedCookie === "") {
+    if (decodedCookie === '') {
       return;
     }
-    let cookieToken = decodedCookie.split('token')[1].slice(1).split(';')[0];
+    //parsing the Token from the cookies
+    let cookieToken = decodedCookie
+      .split('token')[1]
+      .slice(1)
+      .split(';')[0];
     FB.api(
       '/debug_token',
-      'GET', {
-        "input_token": `${cookieToken}`
+      'GET',
+      {
+        input_token: `${cookieToken}`
       },
-      function (response) {
+      //if user is already login and the token
+      //is saved in the cookie then continue
+      function(response) {
         console.log(response.data.is_valid);
-        //if user is already login and the token is saved in the cookie then continue
         if (response.data.is_valid == true) {
-          $('#title').text('user is already login');
+          //$('#status').text('user is already login');
+          $('#loginBtn').hide();
           testAPI();
         }
       }
     );
-    // console.log(response);
-    // console.log(cookieToken);
-    // console.log('-----------------');
-
-
   });
 };
 
-(function (d, s, id) {
+(function(d, s, id) {
   var js,
     fjs = d.getElementsByTagName(s)[0];
   if (d.getElementById(id)) return;
@@ -74,30 +77,31 @@ window.fbAsyncInit = function () {
 
 function testAPI() {
   console.log('Welcome!  Fetching your information.... ');
-  FB.api('/me', function (response) {
+  FB.api('/me', function(response) {
     console.log('Successful login for: ' + response.name);
     document.getElementById('status').innerHTML =
-      'Thanks for logging in, ' + response.name + '!';
+      'Thanks for log in, ' + response.name + '!';
   });
 
   FB.api(
     '/1517960644656/photos',
-    'GET', {
+    'GET',
+    {
       fields: 'created_time,source,likes.summary(true)'
     },
-    async function (response) {
+    async function(response) {
       dataArray = [...response.data];
 
-
       await fetchPhotos(response.paging.next);
-
+      $('#next').show();
       dataArray.sort(compareLikes);
       console.log(dataArray);
 
       $('#next').click(() => {
-        console.log("clicked");
-        var i = 0;
-        for (i; i < 10; i++) {
+        console.log('clicked');
+        document.getElementById('cards').innerHTML = '';
+        var j = i + 8;
+        for (i; i < j; i++) {
           console.log(i);
           if (dataArray[i].likes.summary.total_count > 1) {
             //format the dates
@@ -105,32 +109,20 @@ function testAPI() {
             let date = dataArray[i].created_time.match(regex)[0];
             document.getElementById('cards').innerHTML += `
                 <div class="card">
-                  <img src="${dataArray[i].source}" alt="picture">
+                  <div class='cardImg'>          
+                    <img src="${dataArray[i].source}" alt="picture">
+                  </div>
                   <div class="container">
                   <h4><b>${date}</b></h4>
-                    <p>Likes:${dataArray[i].likes.summary.total_count + 50}</p>
+                    <div class='likes'>
+                    <p><i class="far fa-thumbs-up"></i>${dataArray[i].likes
+                      .summary.total_count + 50}</p>
+                    </div>
                 </div>
               </div>`;
           }
         }
-
-
-      })
-      // for (let i of dataArray) {
-      //   if (i.likes.summary.total_count > 1) {
-      //     //format the dates
-      //     var regex = /\d{4}-\d{2}-\d{2}/;
-      //     let date = i.created_time.match(regex)[0];
-      //     document.getElementById('cards').innerHTML += `
-      //         <div class="card">
-      //           <img src="${i.source}" alt="picture">
-      //           <div class="container">
-      //           <h4><b>${date}</b></h4>
-      //             <p>Likes:${i.likes.summary.total_count + 50}</p>
-      //         </div>
-      //       </div>`;
-      //   }
-      // }
+      });
     }
   );
 }
